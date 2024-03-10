@@ -1,0 +1,2 @@
+#!/bin/bash
+grep "^Host\s\+[^*]" $HOME/.ssh/config | cut -d " " -f 2- | xargs echo local | tr " " "\n" |  fzf > ./.cctl

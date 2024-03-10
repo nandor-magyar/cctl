@@ -1,0 +1,26 @@
+#!/bin/bash
+set -eu -o pipefail
+
+#CONF=${CCTLONF:?".cctl"}
+CONF="$HOME/.cctl"
+#RT=${CCTLRT:?"docker"}
+RT=docker
+
+if ! test -e "$CONF"; then
+    echo "Creating default config, with target: local"
+    echo "local" > $CONF
+fi
+
+TARGET=$(head -n 1 $CONF)
+
+if [[ $TARGET == "" ]]; then {
+    sed -i '1 s/.*$/local/g' $CONF
+}
+fi
+
+
+if [[ $TARGET == "local" ]]; then
+    exec $RT $@
+else
+    exec ssh -q $TARGET $RT $@ 
+fi
